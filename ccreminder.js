@@ -1,103 +1,28 @@
 var config = require('./config.js');
-function runFunc() {
-    console.log("Running");
-}
+var notifications_helper = require('./notications_helper.js');
+var ccreminder_date_helper = require('./ccreminder_date_helper.js');
+var date_helper = require("./date_helper.js");
+var recordsHelper = require('./bill_record_helper.js')
 
-function wasBillPaidBetweenDates(bill, from, to) {
-  return true;
-}
+var getCurrentMonthDate = date_helper.getCurrentMonthDate;
+var dateBetween = date_helper.dateBetween;
+var getDueDate = ccreminder_date_helper.getDueDate;
+var getIssuedDate = ccreminder_date_helper.getIssuedDate;
+var getKeepRemindingBeforeDate = ccreminder_date_helper.getKeepRemindingBeforeDate;
+var getNotifyAfterDate = ccreminder_date_helper.getNotifyAfterDate;
 
-function notifyPending(billConfig, daysLeft) {
-  console.log("Bill payment is pending for ", billConfig.name, " ", daysLeft, " days left to pay");
-}
+var notifyPending = notifications_helper.notifyPending;
+var notifyUpcoming = notifications_helper.notifyUpcoming;
+var notifyGone = notifications_helper.notifyGone;
 
-function notifyUpcoming(billConfig, daysLeft) {
-  console.log("Bill payment is upcoming for ", billConfig.name, " ", daysLeft, " days left to pay");
-}
+var wasBillPaidBetweenDates = recordsHelper.wasBillPaidBetweenDates;
 
-function notifyGone(billConfig, daysGone) {
-  console.log("Bill payment is gone :( for ", billConfig.name, " ", daysGone, " days ago");
-}
-
-function remindFn() {
-    var todaysDate = new Date().getDay();
-    for (bill in config.bills) {
-      remindForBillAndDate(config.bills[bill], todaysDate);
-    }
-}
-
-function dateBetween(dateToCheck, from, to) {
-  return from <= dateToCheck && dateToCheck < to;
-}
-
-function getDueDate(bill, todaysDate) {
-  if (bill.issue_date <= bill.due_date) {
-    return getCurrentMonthDate(bill.due_date);
-  } else {
-    if(todaysDate < bill.issue_date){
-      return getCurrentMonthDate(bill.due_date)
-    } else {
-      return getNextMonthDate(bill.due_date);
-    }
-  }
-}
-
-function getIssuedDate(bill, todaysDate) {
-  if (bill.issue_date <= bill.due_date) {
-    return getCurrentMonthDate(bill.issue_date);
-  } else {
-    if(todaysDate < bill.due_date){
-      return getPreviousMonthDate(bill.issue_date);
-    } else {
-      return getCurrentMonthDate(bill.issue_date);
-    }
-  }
-}
-
-function getPreviousMonthDate(todaysDate) {
-  var d =  getCurrentMonthDate(todaysDate);
-  d.setMonth(d.getMonth() - 1 );
-  return d;
-}
-
-function getNextMonthDate(todaysDate) {
-  var d =  getCurrentMonthDate(todaysDate);
-  d.setMonth(d.getMonth() + 1 );
-  return d;
-}
-
-function getKeepRemindingBeforeDate(bill, todaysDate) {
-  var due_date = getDueDate(bill, todaysDate);
-  var krbDate = new Date(due_date);
-  krbDate.setDate(krbDate.getDate() - bill.keep_reminding_before_days);
-  return krbDate
-}
-
-function getCurrentMonthDate(todaysDate) {
-  var d = new Date();
-  d.setDate(todaysDate);
-  return d;
-}
-
-
-function getNotifyAfterDate(bill, todaysDate) {
-  var due_date = getDueDate(bill, todaysDate);
-  var naDate = new Date(due_date);
-  naDate.setDate(naDate.getDate() + bill.notify_after_days);
-  return naDate
-}
-
-function getDateAt (todaysDate ) {
-  var d = new Date();
-  d.setDate(todaysDate);
-  return d;
-}
 function remindForBillAndDate(bill, todaysDate) {
     var dueDate = getDueDate(bill, todaysDate);
     var issuedDate = getIssuedDate(bill, todaysDate);
     var keepRemindingBeforeDate = getKeepRemindingBeforeDate(bill, todaysDate);
     var notifyAfterDate = getNotifyAfterDate(bill, todaysDate);
-    var today = getDateAt(todaysDate);
+    var today = getCurrentMonthDate(todaysDate);
 
     // console.log("getDueDate", dueDate)
     // console.log("getIssuedDate", issuedDate)
@@ -121,7 +46,14 @@ function remindForBillAndDate(bill, todaysDate) {
     }
 }
 
-module.exports = { run : runFunc , remind : remindFn }
+function remindFn() {
+  var todaysDate = new Date().getDay();
+  for (bill in config.bills) {
+    remindForBillAndDate(config.bills[bill], todaysDate);
+  }
+}
+
+module.exports = {  remind : remindFn }
 
 if (require.main === module) {
   for (bill in config.bills) {
