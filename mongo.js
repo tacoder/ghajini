@@ -21,6 +21,11 @@ function testFn() {
 }
 
 function searchForUploadedBillTypeBetweenDatesFn(billType, start, end, cb) {
-    cb(null, []);
+    BillPaymentReocrd.find({ 
+        'bill_name': billType, 
+        'bill_payment_date': { 
+            "$gte": start, 
+            "$lt": end } 
+        }, (err, data) => {cb(err,data)});
 }
 module.exports = {test: testFn, recordPayment:recordPaymentFn, searchForUploadedBillTypeBetweenDates:searchForUploadedBillTypeBetweenDatesFn}
