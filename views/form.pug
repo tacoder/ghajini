@@ -1,0 +1,15 @@
+html
+html
+   head
+      title Form Tester
+   body
+      form(action = "/uploadBill", method = "POST")
+         div
+            label(for = "say") Say:
+            input(name = "billType" value = "Hi")
+         br
+         div
+            label(for = "to") To:
+            input(name = "proof" value = "Express forms" type="File")
+         br
+         button(type = "submit") Send my greetings
