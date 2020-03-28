@@ -1,6 +1,8 @@
 html
 html
    head
+      style
+         include style.css
       title Form Tester
    body
       form(action = "/uploadBill", method = "POST" enctype="multipart/form-data")
@@ -14,7 +16,7 @@ html
                      option(value=bill.name) #{bill.name}
          br
          div
-            label(for = "to") To:
-            input(name = "proof" value = "Express forms" type="File")
+            label(for = "to") Proof:
+            input(name = "proof" value = "Express forms" type="File" required)
          br
-         button(type = "submit") Send my greetings
+         input(type = "submit" value="Upload proof!") 
