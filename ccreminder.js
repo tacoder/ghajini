@@ -34,8 +34,9 @@ function remindForBillAndDate(bill, todaysDate) {
     if (dateBetween(today, issuedDate, dueDate)) {
       wasBillPaidBetweenDates(bill, issuedDate, dueDate, function (err, wasPaid){
         if(!wasPaid){
-          notifyPending(bill, Math.round((dueDate - today)/(1000*60*60*24) ));
+          return notifyPending(bill, Math.round((dueDate - today)/(1000*60*60*24) ));
         }
+        return;
       });
     } 
 
