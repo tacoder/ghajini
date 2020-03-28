@@ -7,34 +7,31 @@ const mongoose = require("./mongo.js");
 const fileUpload = require('express-fileupload');
 const uploadRoutes = require('./upload_routes.js');
 const app = express();
-// var bodyParser = require('body-parser');
-// default options
+const config = require("./config.js");
+
 app.use(fileUpload());
-app.get('/', function(req, res){
-  res.render('form');
-});
+
+
 app.set('view engine', 'pug');
 app.set('views', './views');
 
-// Constants
 const PORT = 8080;
 const HOST = '0.0.0.0';
-// app.use(bodyParser.urlencoded({ extended: true })); 
-// App
-// const app = express();
+
 app.get('/ping', (req, res) => {
   res.send('Hello World Reloaded!');
 });
 
-app.get('/mongo', (req,res) => {
-    console.log("Testing mongoose");
-    mongoose.test();
-})
-
 app.get('/remind', (req,res) => {
     console.log("Remingdin");
     ccreminder.remind();
-})
+    res.send('Reminding!');
+});
+
+app.get('/uploadBill', function(req, res){
+  var requestedBillType = req.param('billType');
+  res.render('form', {config:config, requestedBillType : requestedBillType});
+});
 app.post('/uploadBill', uploadRoutes.uploadBill);
 
 cron.schedule("* * * * *", function(){console.log("run")});

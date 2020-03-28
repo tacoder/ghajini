@@ -3,10 +3,15 @@ html
    head
       title Form Tester
    body
-      form(action = "/uploadBill", method = "POST")
+      form(action = "/uploadBill", method = "POST" enctype="multipart/form-data")
          div
-            label(for = "say") Say:
-            input(name = "billType" value = "Hi")
+            label(for = "Bill type") Bill Type:
+            select(name="billType")
+               each bill in config.bills
+                  if requestedBillType == bill.name
+                     option(value=bill.name selected) #{bill.name}
+                  else 
+                     option(value=bill.name) #{bill.name}
          br
          div
             label(for = "to") To:
