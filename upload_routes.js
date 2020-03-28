@@ -1,10 +1,11 @@
 
 const mongoose = require("./mongo.js");
 const config = require("./config.js");
+const mkdirp = require('mkdirp')
 
 function validBillType(billType) {
     for (bill in config.bills) {
-        if (bill.name === billType) {
+        if (config.bills[bill].name === billType) {
             return true;
         }
     }
@@ -30,44 +31,45 @@ function alreadyUploaded(billType, cb ){
     });
 }
 
-function getProofLocation(billType) {
+function getProofDirectory(billType) {
     folderName = '/var/uploaded-bills/';
     var now = new Date();
     var date = now.getFullYear() + "-"+ now.getMonth() + "-" + now.getDate();
-    return folderName+date+'/'+billType+'/'; 
+    return folderName+date+'/'+billType; 
 }
 
 function uploadBillFn(req, res) {
-  var billType = req.params.billType;
-  var proofLocation = getProofLocation(billType); //'/var/uploaded-bills/bill-type/filename.jpg';
 
   // Validations:
   if (!req.files || Object.keys(req.files).length === 0) {
     return res.status(400).send('No files were uploaded.');
   }
+  if (!req.body || Object.keys(req.body).length === 0) {
+    return res.status(400).send('No parameters were provided.');
+  }
+  var billType = req.body.billType;
+
   let proof = req.files.proof;
+  var proofDirectory = getProofDirectory(billType); //'/var/uploaded-bills/bill-type/filename.jpg';
 
   if (!validBillType(billType)) {
     return res.status(400).send('Unsupported bill type.');
   }
-  if(alreadyUploaded(billType), function(err, isUploaded) {
+  alreadyUploaded(billType, function(err, isUploaded) {
       if(err ) {
         return res.status(500).send(err);  
       } else {
           if(isUploaded) {
             return res.status(400).send('Already uploaded for this bill type today. Try again tomorrow!');
           } else {
-            mkdirp(proofLocation, function(err) { 
-                if(err) {
-                    console.log(err);
-                        return res.status(500).send(err);
-                } else {
-                    proof.mv(proofLocation, function(err) {
+            mkdirp.sync(proofDirectory);
+            {
+                    proof.mv(proofDirectory + '/' + proof.name, function(err) {
                         if (err) {
                             console.log(err);
                             return res.status(500).send(err);
                         } else {
-                            mongoose.recordPayment({name:billType}, new Date(), proofLocation, function(err, data) {
+                            mongoose.recordPayment({name:billType}, new Date(), proofDirectory, function(err, data) {
                                 if(err) {
                                     console.log("ERROR!-", err);
                                     return res.status(500).send(err);
@@ -79,7 +81,7 @@ function uploadBillFn(req, res) {
                         }
                     });
                 }       
-            });
+            
      
           }
       }
