@@ -40,7 +40,7 @@ function getProofDirectory(billType) {
 
 function uploadBillFn(req, res) {
 
-  // Validations:
+  // Validations:                                                           
   if (!req.files || Object.keys(req.files).length === 0) {
     return res.status(400).send('No files were uploaded.');
   }
@@ -50,7 +50,7 @@ function uploadBillFn(req, res) {
   var billType = req.body.billType;
 
   let proof = req.files.proof;
-  var proofDirectory = getProofDirectory(billType); //'/var/uploaded-bills/bill-type/filename.jpg';
+  var proofDirectory = getProofDirectory(billType); 
 
   if (!validBillType(billType)) {
     return res.status(400).send('Unsupported bill type.');

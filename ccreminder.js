@@ -31,8 +31,12 @@ function remindForBillAndDate(bill, todaysDate) {
     // console.log("today: ", today);
 
     // Is pending?
-    if (dateBetween(today, issuedDate, dueDate) && !wasBillPaidBetweenDates(bill, issuedDate, dueDate)){
-      notifyPending(bill, Math.round((dueDate - today)/(1000*60*60*24) ));
+    if (dateBetween(today, issuedDate, dueDate)) {
+      wasBillPaidBetweenDates(bill, issuedDate, dueDate, function (err, wasPaid){
+        if(!wasPaid){
+          notifyPending(bill, Math.round((dueDate - today)/(1000*60*60*24) ));
+        }
+      });
     } 
 
     // Is near?
@@ -56,14 +60,14 @@ function remindFn() {
 module.exports = {  remind : remindFn }
 
 if (require.main === module) {
-  for (bill in config.bills) {
+  // for (bill in config.bills) {
     console.log("==============================");
     console.log("==============================");
     console.log("==============================");
 
     for (var i = 1 ; i <= 31 ; i ++) {
       console.log("DAY #",i)
-        remindForBillAndDate(config.bills[bill], i);
+        remindForBillAndDate(config.bills[0], i);
     }
-  }
+  // }
 }
