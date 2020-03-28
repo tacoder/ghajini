@@ -11,7 +11,6 @@ const config = require("./config.js");
 
 app.use(fileUpload());
 
-
 app.set('view engine', 'pug');
 app.set('views', './views');
 
@@ -19,7 +18,7 @@ const PORT = 8080;
 const HOST = '0.0.0.0';
 
 app.get('/ping', (req, res) => {
-  res.send('Hello World Reloaded!');
+  res.send('healthy!');
 });
 
 app.get('/remind', (req,res) => {
@@ -29,12 +28,13 @@ app.get('/remind', (req,res) => {
 });
 
 app.get('/uploadBill', function(req, res){
-  var requestedBillType = req.param('billType');
+  var requestedBillType = req.query.billType;
   res.render('form', {config:config, requestedBillType : requestedBillType});
 });
 app.post('/uploadBill', uploadRoutes.uploadBill);
 
-cron.schedule("* * * * *", function(){console.log("run")});
+cron.schedule("0 0 6 * * *", function(){console.log("run")});
 
 app.listen(PORT, HOST);
+
 console.log(`Running on http://${HOST}:${PORT}`);
