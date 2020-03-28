@@ -30,7 +30,7 @@ function notifyUpcomingFn(billConfig, daysLeft) {
 
 function notifyGoneFn(billConfig, daysGone) {
     var subject = "[ALERT] Past due date for " + billConfig.name;
-    var text = `Bill payment is upcoming for ${billConfig.name} ${daysGone} days left to pay.`;
+    var text = `Bill payment is past due date for ${billConfig.name} ${daysGone} days passed.`;
     var paymentUrl = getPaymentUrlForBill(billConfig);
     var html = getHtmlForEmail(text, billConfig);
     console.log(text);
