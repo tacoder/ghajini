@@ -1,4 +1,4 @@
-version: '3.5'
+version: '2.0'
 # Define the services/containers to be run
 services:
   database: # name of the service

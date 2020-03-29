@@ -2,7 +2,7 @@ var email_helper = require('./email_service.js');
 var config = require('./config.js');
 
 function getPaymentUrlForBill(bill) {
-    return `https://abhinavsingh.co.in/ghajini/uploadProof?billType=${bill.name}`;
+    return `https://abhinavsingh.co.in/ghajini/uploadBill?billType=${bill.name}`;
 }
 
 function getHtmlForEmail(text, billConfig) {
