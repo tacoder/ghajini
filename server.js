@@ -33,7 +33,8 @@ app.get('/uploadBill', function(req, res){
 });
 app.post('/uploadBill', uploadRoutes.uploadBill);
 
-cron.schedule("0 0 6 * * *", function(){console.log("run")});
+cron.schedule("0 0 7 * * *", function(){console.log("running cron");     ccreminder.remind();
+});
 
 app.listen(PORT, HOST);
 
