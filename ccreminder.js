@@ -52,7 +52,7 @@ function remindForBillAndDate(bill, todaysDate) {
 }
 
 function remindFn() {
-  var todaysDate = new Date().getDay();
+  var todaysDate = new Date().getDate();
   for (bill in config.bills) {
     remindForBillAndDate(config.bills[bill], todaysDate);
   }
