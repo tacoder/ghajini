@@ -3,6 +3,8 @@ version: '2.0'
 services:
   database: # name of the service
     image: mongo # specify image to build container from
+    volumes:
+      - mongodb_data_container:/data/db
   myapp: #name of your service
     build: ./ # specify the directory of the Dockerfile
     ports:
@@ -15,5 +17,5 @@ services:
       - database
     environment: 
       - SENDGRID_API_KEY
-
-
+volumes:
+  mongodb_data_container:
