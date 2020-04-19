@@ -9,9 +9,25 @@ var config =  {
           email: "abhinav.singh21093@gmail.com"
         },
         {
-          name: "sbi card bill pay",
+          name: "sbi BPCL bill pay",
           issue_date: 8,
           due_date: 28,
+          keep_reminding_before_days: 3,
+          notify_after_days: 2,
+          email: "abhinav.singh21093@gmail.com"
+        },
+        {
+          name: "sbi ELITE bill pay",
+          issue_date: 17,
+          due_date: 6,
+          keep_reminding_before_days: 3,
+          notify_after_days: 2,
+          email: "abhinav.singh21093@gmail.com"
+        },
+        {
+          name: "HDFC diners bill pay",
+          issue_date: 15,
+          due_date: 5,
           keep_reminding_before_days: 3,
           notify_after_days: 2,
           email: "abhinav.singh21093@gmail.com"
