@@ -52,7 +52,6 @@ select {
   display: inline-block;
   border: 1px solid #ccc;
   border-radius: 4px;
-  box-sizing: border-box;
 }
 
 input,
@@ -62,6 +61,7 @@ select {
   font-size: 20px;
   padding: 12px 20px;
   background-color: #ffffff80;
+  box-sizing: border-box;
 }
 
 input[type=submit] {
