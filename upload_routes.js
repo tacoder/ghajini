@@ -1,5 +1,6 @@
 
 const mongoose = require("./mongo.js");
+const uploadNotifier = require("./upload_notifier.js");
 const config = require("./config.js");
 const mkdirp = require('mkdirp')
 
@@ -35,7 +36,7 @@ function getProofDirectory(billType) {
     folderName = '/var/uploaded-bills/';
     var now = new Date();
     var date = now.getFullYear() + "-"+ now.getMonth() + "-" + now.getDate();
-    return folderName+date+'/'+billType; 
+    return folderName+billType+'/'+date; 
 }
 
 function uploadBillFn(req, res) {
@@ -63,24 +64,23 @@ function uploadBillFn(req, res) {
             return res.status(400).send('Already uploaded for this bill type today. Try again tomorrow!');
           } else {
             mkdirp.sync(proofDirectory);
-            {
-                    proof.mv(proofDirectory + '/' + proof.name, function(err) {
-                        if (err) {
-                            console.log(err);
+            proof.mv(proofDirectory + '/' + proof.name, function(err) {
+                if (err) {
+                    console.log(err);
+                    return res.status(500).send(err);
+                } else {
+                    mongoose.recordPayment({name:billType}, new Date(), proofDirectory, function(err, data) {
+                        if(err) {
+                            console.log("ERROR!-", err);
                             return res.status(500).send(err);
                         } else {
-                            mongoose.recordPayment({name:billType}, new Date(), proofDirectory, function(err, data) {
-                                if(err) {
-                                    console.log("ERROR!-", err);
-                                    return res.status(500).send(err);
-                                } else {
-                                    console.log("Received data after record paytment in mongoose- ", data);
-                                    res.send('File uploaded!');
-                                }
-                            });
+                            console.log("Received data after record paytment in mongoose- ", data);
+                            uploadNotifier.notify(data);
+                            res.send('File uploaded!');
                         }
                     });
-                }       
+                }
+            });
             
      
           }

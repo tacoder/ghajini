@@ -17,5 +17,6 @@ services:
       - database
     environment: 
       - SENDGRID_API_KEY
+      - GHAJINI_MONGO_URL=mongodb://database:27017/test
 volumes:
   mongodb_data_container:
