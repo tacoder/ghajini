@@ -8,53 +8,79 @@ var getCurrentMonthDate = date_helper.getCurrentMonthDate;
 var dateBetween = date_helper.dateBetween;
 var getDueDate = ccreminder_date_helper.getDueDate;
 var getIssuedDate = ccreminder_date_helper.getIssuedDate;
-var getKeepRemindingBeforeDate = ccreminder_date_helper.getKeepRemindingBeforeDate;
-var getNotifyAfterDate = ccreminder_date_helper.getNotifyAfterDate;
 
 var notifyPending = notifications_helper.notifyPending;
-var notifyUpcoming = notifications_helper.notifyUpcoming;
-var notifyGone = notifications_helper.notifyGone;
 
 var wasBillPaidBetweenDates = recordsHelper.wasBillPaidBetweenDates;
+
+function isDueDateNear(unpaid_bill_notification, daysLeft) {
+  if ( daysLeft >= 0  && unpaid_bill_notification.days_before >= daysLeft) {
+    return true;
+  } else if(daysLeft < 0 && unpaid_bill_notification.days_after >= (-daysLeft)) {
+    return true;
+  }
+
+  return false;
+}
 
 function remindForBillAndDate(bill, todaysDate) {
     var dueDate = getDueDate(bill, todaysDate);
     var issuedDate = getIssuedDate(bill, todaysDate);
-    var keepRemindingBeforeDate = getKeepRemindingBeforeDate(bill, todaysDate);
-    var notifyAfterDate = getNotifyAfterDate(bill, todaysDate);
     var today = getCurrentMonthDate(todaysDate);
 
     // console.log("getDueDate", dueDate)
     // console.log("getIssuedDate", issuedDate)
     // console.log("getKeepRemindingBeforeDate", keepRemindingBeforeDate)
     // console.log("getNotifyAfterDate", notifyAfterDate)
-    // console.log("today: ", today);
 
     // Is pending?
-    if (dateBetween(today, issuedDate, dueDate)) {
-      wasBillPaidBetweenDates(bill, issuedDate, dueDate, function (err, wasPaid){
-        if(!wasPaid){
-          return notifyPending(bill, Math.round((dueDate - today)/(1000*60*60*24) ));
+    wasBillPaidBetweenDates(bill, issuedDate, dueDate, function (err, wasPaid, paidBillDetails){
+      console.log("today: ", today);
+      if(err) {
+        console.log("Received error while checking if bill was paid or not. Assuming it was not paid and sending further notifications. This message should also be notified to user so a notification is also sent to admin.");
+        notifications_helper.notifyFatalError(err);
+        wasPaid = false;
+      }
+      var daysLeft = Math.round((dueDate - today)/(1000*60*60*24));
+      if (dateBetween(today, issuedDate, dueDate)) {
+        if (!wasPaid) {
+          notifyPending(bill, daysLeft);
         }
-        return;
-      });
-    } 
+      }
+      if(wasPaid) {
+        // If today is notification day for paid bills
+        if(bill.paid_bill_notification_days == daysLeft) {
+          // notify upcoming due date
+          notifications_helper.notifyPaidBill(bill, daysLeft, paidBillDetails)
+        }
+      } else {
+        if(isDueDateNear(bill.unpaid_bill_notification, daysLeft)) {
+          // notify URGENT near due date
+          notifications_helper.alertUnpaidBill(bill, daysLeft);
+        }
+      }
+    });
 
-    // Is near?
-    if(dateBetween(today, keepRemindingBeforeDate, dueDate)) {
-     notifyUpcoming(bill, Math.round((dueDate - today)/(1000*60*60*24) ));
+}
+
+
+function mergeConfig(config, commonConfig) {
+  for (key in commonConfig) {
+    if(! (key in config)) {
+      config[key] = commonConfig[key];
     }
-    
-    // Is recently gone?
-    if(dateBetween(today, dueDate, notifyAfterDate)) {
-     notifyGone(bill,  Math.round((today - dueDate)/(1000*60*60*24)) );
-    }
+  }
+  return config;
 }
 
 function remindFn() {
   var todaysDate = new Date().getDate();
   for (bill in config.bills) {
-    remindForBillAndDate(config.bills[bill], todaysDate);
+    var billConfig = config.bills[bill];
+    var billConfigWithCommons = mergeConfig(billConfig, config.common);
+    console.log("CONFIG ID ");
+    console.log(JSON.stringify(billConfigWithCommons));
+    remindForBillAndDate(billConfigWithCommons, todaysDate);
   }
 }
 
@@ -65,10 +91,12 @@ if (require.main === module) {
     console.log("==============================");
     console.log("==============================");
     console.log("==============================");
+    var mergedConfig = mergeConfig(config.bills[0], config.common);
+    console.log(JSON.stringify(mergedConfig));
 
-    for (var i = 1 ; i <= 31 ; i ++) {
+    for (var i = 1 ; i <= 30 ; i ++) {
       console.log("DAY #",i)
-        remindForBillAndDate(config.bills[0], i);
+      remindForBillAndDate(mergedConfig, i);
     }
   // }
 }
