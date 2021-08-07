@@ -13,6 +13,14 @@ var notifyPending = notifications_helper.notifyPending;
 
 var wasBillPaidBetweenDates = recordsHelper.wasBillPaidBetweenDates;
 
+function dueDateUpcoming(unpaid_bill_notification, daysLeft) {
+  if ( daysLeft >= 0  && unpaid_bill_notification.days_before >= daysLeft) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 function isDueDateNear(unpaid_bill_notification, daysLeft) {
   if ( daysLeft >= 0  && unpaid_bill_notification.days_before >= daysLeft) {
     return true;
@@ -62,7 +70,7 @@ function remindForBillAndDate(bill, todaysDate) {
       } else {
         if(isDueDateNear(bill.unpaid_bill_notification, daysLeft)) {
           // notify URGENT near due date
-          if(dueDateUpcoming()){
+          if(dueDateUpcoming(bill.unpaid_bill_notification, daysLeft)){
             notifications_helper.alertUnpaidBill(bill, daysLeft);
           } else {
             wasBillPaidBetweenDates(bill, minusOneMonth(issuedDate), minusOneMonth(dueDate), function (err, wasPaid, paidBillDetails){
