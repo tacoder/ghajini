@@ -91,7 +91,7 @@ function uploadBillFn(req, res) {
                     console.log(err);
                     return res.status(500).send(err);
                 } else {
-                    mongoose.recordPayment({name:billType}, new Date(), proofDirectory, function(err, data) {
+                    mongoose.recordPayment({name:billType}, new Date(), proofDirectory + '/' + proof.name, function(err, data) {
                         if(err) {
                             console.log("ERROR!-", err);
                             return res.status(500).send(err);
