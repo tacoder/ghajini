@@ -13,6 +13,15 @@ function validBillType(billType) {
     return false;
 }
 
+function getBillConfig(billType) {
+    for (bill in config.bills) {
+        if (config.bills[bill].name === billType) {
+            return config.bills[bill];
+        }
+    }
+    return false;
+}
+
 function alreadyUploaded(billType, cb ){
     var start = new Date();
     start.setHours(0,0,0,0);
@@ -49,7 +58,7 @@ function mergeConfig(config, commonConfig) {
 }
   
 function getConfig(billType) {
-    return mergeConfig(config.bills[billType], config.common);
+    return mergeConfig(getBillConfig(billType), config.common);
 }
 
 function uploadBillFn(req, res) {
