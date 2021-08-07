@@ -39,6 +39,19 @@ function getProofDirectory(billType) {
     return folderName+billType+'/'+date; 
 }
 
+function mergeConfig(config, commonConfig) {
+    for (key in commonConfig) {
+      if(! (key in config)) {
+        config[key] = commonConfig[key];
+      }
+    }
+    return config;
+}
+  
+function getConfig(billType) {
+    return mergeConfig(config.bills[billType], config.common);
+}
+
 function uploadBillFn(req, res) {
 
   // Validations:                                                           
@@ -75,7 +88,7 @@ function uploadBillFn(req, res) {
                             return res.status(500).send(err);
                         } else {
                             console.log("Received data after record paytment in mongoose- ", data);
-                            uploadNotifier.notify(data);
+                            uploadNotifier.notify(getConfig(billType), data);
                             res.send('File uploaded!');
                         }
                     });

@@ -44,9 +44,9 @@ function notifyPendingFn(billConfig, daysLeft) {
     email_helper.sendMail(subject, text, html, billConfig.email);
 }
 
-function notifyUploadBillFn(billConfig, daysLeft, uploadedBillDetails) {
+function notifyUploadBillFn(billConfig, uploadedBillDetails) {
     var subject = "[INFO] Bill paid for " + billConfig.name;
-    var text = `Bill payment is upcoming for ${billConfig.name} ${daysLeft} days left to pay.`;
+    var text = `This is a notification that you have just uploaded a bill proof of type - ${billConfig.name}. File uploaded is attached for your reference.`;
     var html = getHtmlForEmail(text, billConfig);
     var attachments = [getAttachmentForPath(getUploadedFilePath(uploadedBillDetails))];
     console.log(text);
