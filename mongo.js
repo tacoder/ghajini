@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const mongoUrl = process.env.GHAJINI_MONGO_URL || 'mongodb://localhost:27017/test'
-mongoose.connect(mongoUrl , {useNewUrlParser: true, useUnifiedTopology: true, serverSelectionTimeoutMS: 10000});
+mongoose.connect(mongoUrl , {useNewUrlParser: true, useUnifiedTopology: true, serverSelectionTimeoutMS: 1000});
 
 const BillPaymentReocrd = mongoose.model('BillPaymentRecord', {'bill_name': String, 'bill_payment_date': Date, 'proofLocation':String})
 

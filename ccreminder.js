@@ -23,6 +23,12 @@ function isDueDateNear(unpaid_bill_notification, daysLeft) {
   return false;
 }
 
+function minusOneMonth(date) {
+  var d = new Date(date);
+  d.setMonth(d.getMonth() - 1);
+  return d;
+}
+
 function remindForBillAndDate(bill, todaysDate) {
     var dueDate = getDueDate(bill, todaysDate);
     var issuedDate = getIssuedDate(bill, todaysDate);
@@ -56,7 +62,15 @@ function remindForBillAndDate(bill, todaysDate) {
       } else {
         if(isDueDateNear(bill.unpaid_bill_notification, daysLeft)) {
           // notify URGENT near due date
-          notifications_helper.alertUnpaidBill(bill, daysLeft);
+          if(dueDateUpcoming()){
+            notifications_helper.alertUnpaidBill(bill, daysLeft);
+          } else {
+            wasBillPaidBetweenDates(bill, minusOneMonth(issuedDate), minusOneMonth(dueDate), function (err, wasPaid, paidBillDetails){
+              if(wasPaid) {
+                notifications_helper.alertUnpaidBill(bill, daysLeft);
+              }
+            });
+          }
         }
       }
     });
