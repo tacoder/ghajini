@@ -22,10 +22,9 @@ function base64StringFromFile(file){
     var bitmap = fs.readFileSync(file);
     return Buffer.from(bitmap).toString('base64');
 }
-    
+
 function getAttachmentForPath(filePath) {
     var filename = path.basename(filePath);
-    // var extension = path.extname(filePath);
     var attachmentType = mime.contentType(filePath);
     var content = base64StringFromFile(filePath);
     return {
@@ -33,7 +32,26 @@ function getAttachmentForPath(filePath) {
         filename: filename,
         type: attachmentType,
         disposition: 'attachment'
-    }  
+    }
+}
+
+function getAttachments(filePaths) {
+    console.log("getting attachments - ", filePaths);
+    var toReturn = [];
+    for(var index in filePaths) {
+        var filePath = getUploadedFilePath(filePaths[index]);
+        console.log("getting attachment for file path - ", filePath);
+        if((!(filePath)) || filePath === "") {
+            // Do nothing
+        } else {
+            try {
+            toReturn.push(getAttachmentForPath(filePath));
+            } catch (e) {
+                console.error("Exception caught while trying to get attachment from file path - " , filePath, e);
+            }
+        }
+    }
+    return toReturn;
 }
 
 function notifyPendingFn(billConfig, daysLeft) {
@@ -48,16 +66,17 @@ function notifyUploadBillFn(billConfig, uploadedBillDetails) {
     var subject = "[INFO] Bill paid for " + billConfig.name;
     var text = `This is a notification that you have just uploaded a bill proof of type - ${billConfig.name}. File uploaded is attached for your reference.`;
     var html = getHtmlForEmail(text, billConfig);
-    var attachments = [getAttachmentForPath(getUploadedFilePath(uploadedBillDetails))];
+    var attachments  = getAttachments((uploadedBillDetails));
     console.log(text);
     email_helper.sendMail(subject, text, html, billConfig.email, attachments);
 }
 
 function notifyPaidBillFn(billConfig, daysLeft, uploadedBillDetails) {
     var subject = "[INFO] Upcoming due date for " + billConfig.name;
-    var text = `You have already paid this bill. This email is just a notification for your reference. In case the proof is wrong or you wish to upload proof again, use the link below.<br /> <br /> Due date is upcoming for ${billConfig.name} ${daysLeft} days left to pay.`;
+    console.log(uploadedBillDetails);
+    var text = `You have already paid this bill. This email is just a notification for your reference.<br /> <br />  Proof location as per record is - ${getUploadedFilePath(uploadedBillDetails)} In case the proof is wrong or you wish to upload proof again, use the link below.<br /> <br /> Due date is upcoming for ${billConfig.name} ${daysLeft} days left to pay.`;
     var html = getHtmlForEmail(text, billConfig);
-    var attachments = [getAttachmentForPath(getUploadedFilePath(uploadedBillDetails))];
+    var attachments = getAttachments((uploadedBillDetails));
     console.log(text);
     email_helper.sendMail(subject, text, html, billConfig.email, attachments);
 }
@@ -70,15 +89,24 @@ function alertUnpaidBillFn(billConfig, daysLeft) {
     } else {
         text += `${-daysLeft} days have already passed!!!`;
     }
-     
+
     var html = getHtmlForEmail(text, billConfig);
     console.log(text);
     email_helper.sendMail(subject, text, html, billConfig.email);
 }
 
+function notifyFatalErrorFn(err, adminEmail) {
+    var subject = "[!!FATAL!!] Fatal error occurred in ghajini app";
+    var text = '<p>Fatal error received in application!<br /><br />' + `${err}` + '<br /> <br />' + `${err.stack}` + '</p>' ;
+    var html = `<p>${text}</p>`
+    console.log(text);
+    email_helper.sendMail(subject, text, html, adminEmail);
+}
+
 module.exports = {
     notifyPending:notifyPendingFn,
-    notifyUploadBill:notifyUploadBillFn, 
+    notifyUploadBill:notifyUploadBillFn,
     notifyPaidBill:notifyPaidBillFn,
-    alertUnpaidBill:alertUnpaidBillFn
+    alertUnpaidBill:alertUnpaidBillFn,
+    notifyFatalError:notifyFatalErrorFn
 }

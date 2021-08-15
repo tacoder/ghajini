@@ -13,10 +13,12 @@ services:
       - database # link this service to the database service
     volumes:
       - .:/usr/src/app
+      - /var/uploaded-bills/:/var/uploaded-bills/
     depends_on:
       - database
     environment: 
       - SENDGRID_API_KEY
       - GHAJINI_MONGO_URL=mongodb://database:27017/test
+    restart: always
 volumes:
   mongodb_data_container:

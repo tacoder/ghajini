@@ -25,10 +25,10 @@ function getBillConfig(billType) {
 function alreadyUploaded(billType, cb ){
     var start = new Date();
     start.setHours(0,0,0,0);
-    
+
     var end = new Date();
-    end.setHours(23,59,59,999);    
-    
+    end.setHours(23,59,59,999);
+
     mongoose.searchForUploadedBillTypeBetweenDates(billType, start, end, function(err, data){
         if(err) {
             cb(err, true);
@@ -45,7 +45,7 @@ function getProofDirectory(billType) {
     folderName = '/var/uploaded-bills/';
     var now = new Date();
     var date = now.getFullYear() + "-"+ now.getMonth() + "-" + now.getDate();
-    return folderName+billType+'/'+date; 
+    return folderName+billType+'/'+date;
 }
 
 function mergeConfig(config, commonConfig) {
@@ -56,14 +56,14 @@ function mergeConfig(config, commonConfig) {
     }
     return config;
 }
-  
+
 function getConfig(billType) {
     return mergeConfig(getBillConfig(billType), config.common);
 }
 
 function uploadBillFn(req, res) {
 
-  // Validations:                                                           
+  // Validations:
   if (!req.files || Object.keys(req.files).length === 0) {
     return res.status(400).send('No files were uploaded.');
   }
@@ -73,14 +73,15 @@ function uploadBillFn(req, res) {
   var billType = req.body.billType;
 
   let proof = req.files.proof;
-  var proofDirectory = getProofDirectory(billType); 
+  var proofDirectory = getProofDirectory(billType);
 
   if (!validBillType(billType)) {
     return res.status(400).send('Unsupported bill type.');
   }
   alreadyUploaded(billType, function(err, isUploaded) {
+      isUploaded = false;
       if(err ) {
-        return res.status(500).send(err);  
+        return res.status(500).send(err);
       } else {
           if(isUploaded) {
             return res.status(400).send('Already uploaded for this bill type today. Try again tomorrow!');
@@ -103,11 +104,11 @@ function uploadBillFn(req, res) {
                     });
                 }
             });
-            
-     
+
+
           }
       }
-  });  
+  });
 }
 
 module.exports ={uploadBill:uploadBillFn}

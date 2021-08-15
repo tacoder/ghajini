@@ -12,7 +12,8 @@ function sendMailFn(subject, text, html, recepient, attachments=[]) {
         html: html,
         attachments: attachments
     };
-    sgMail.send(msg);   
+    console.log("sending email", JSON.stringify(msg, null, 2));
+    sgMail.send(msg);
 }
 
 module.exports = {sendMail:sendMailFn}

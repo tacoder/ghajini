@@ -64,6 +64,7 @@ function remindForBillAndDate(bill, todaysDate) {
       if(wasPaid) {
         // If today is notification day for paid bills
         if(bill.paid_bill_notification_days == daysLeft) {
+            console.log("Bill was paid, paid bill details - ", JSON.stringify(paidBillDetails, null, 2));
           // notify upcoming due date
           notifications_helper.notifyPaidBill(bill, daysLeft, paidBillDetails)
         }
@@ -74,7 +75,7 @@ function remindForBillAndDate(bill, todaysDate) {
             notifications_helper.alertUnpaidBill(bill, daysLeft);
           } else {
             wasBillPaidBetweenDates(bill, minusOneMonth(issuedDate), minusOneMonth(dueDate), function (err, wasPaid, paidBillDetails){
-              if(wasPaid) {
+              if(!wasPaid) {
                 notifications_helper.alertUnpaidBill(bill, daysLeft);
               }
             });
