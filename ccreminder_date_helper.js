@@ -34,7 +34,7 @@ function getDueDateFn(bill, todaysDate) {
     if (bill.issue_date <= bill.due_date) {
       return getCurrentMonthDate(bill.issue_date);
     } else {
-      if(todaysDate < bill.due_date){
+      if(todaysDate <= bill.due_date){
         return getPreviousMonthDate(bill.issue_date);
       } else {
         return getCurrentMonthDate(bill.issue_date);
