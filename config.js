@@ -1,10 +1,10 @@
 /**
- * paid_bill_notification_days : 
+ * paid_bill_notification_days :
  *  This value determines the days X before due date, on which an `inform` notification will be sent to user to inform of a upcoming due date for a PAID bill
- * 
+ *
  * unpaid_bill_notification:
  *  This value determines from and to which day (relative to due date) an URGENT notifications will be sent daily for an upcoming UNPAID bill
- * 
+ *
  */
 var config =  {
     common : {

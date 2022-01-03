@@ -42,44 +42,70 @@ function remindForBillAndDate(bill, todaysDate) {
     var issuedDate = getIssuedDate(bill, todaysDate);
     var today = getCurrentMonthDate(todaysDate);
 
-    // console.log("getDueDate", dueDate)
-    // console.log("getIssuedDate", issuedDate)
-    // console.log("getKeepRemindingBeforeDate", keepRemindingBeforeDate)
-    // console.log("getNotifyAfterDate", notifyAfterDate)
 
     // Is pending?
     wasBillPaidBetweenDates(bill, issuedDate, dueDate, function (err, wasPaid, paidBillDetails){
+      console.log("==================================");
+      console.log("==================================");
+      console.log("==================================");
       console.log("today: ", today);
+      console.log("Checking for bill , ", bill.name);
+      console.log("was paid - ", wasPaid, " paid bill details - ", paidBillDetails);
+      console.log(" ----  ");
+    console.log("getDueDate", dueDate)
+    console.log("getIssuedDate", issuedDate)
       if(err) {
         console.log("Received error while checking if bill was paid or not. Assuming it was not paid and sending further notifications. This message should also be notified to user so a notification is also sent to admin.");
         notifications_helper.notifyFatalError(err);
         wasPaid = false;
       }
       var daysLeft = Math.round((dueDate - today)/(1000*60*60*24));
+      console.log("Days left for payment are - ", daysLeft)
       if (dateBetween(today, issuedDate, dueDate)) {
+          console.log("Toady is between issue date and due date.");
         if (!wasPaid) {
+            console.log("Bill has not been paid, notifying bill payment for this bill type.");
           notifyPending(bill, daysLeft);
         }
       }
       if(wasPaid) {
+          console.log("Bill was already paid, with details - ", paidBillDetails);
         // If today is notification day for paid bills
         if(bill.paid_bill_notification_days == daysLeft) {
-            console.log("Bill was paid, paid bill details - ", JSON.stringify(paidBillDetails, null, 2));
+            console.log("Time for notification , Bill was paid, paid bill details - ", JSON.stringify(paidBillDetails, null, 2));
           // notify upcoming due date
           notifications_helper.notifyPaidBill(bill, daysLeft, paidBillDetails)
         }
       } else {
+          console.log("Bill was not paid, checking if due date is near...");
+
         if(isDueDateNear(bill.unpaid_bill_notification, daysLeft)) {
           // notify URGENT near due date
+          console.log("Bill due date is near, days left = ", daysLeft, " bill unpaid config details = ", bill.unpaid_bill_notification);
           if(dueDateUpcoming(bill.unpaid_bill_notification, daysLeft)){
+              console.log("Due date is upcoming... alerting unpaid bill notif ");
             notifications_helper.alertUnpaidBill(bill, daysLeft);
           } else {
-            wasBillPaidBetweenDates(bill, minusOneMonth(issuedDate), minusOneMonth(dueDate), function (err, wasPaid, paidBillDetails){
+              console.log("Due date has gone by, checking if last cycle bill details were uploaded.");
+              var lastStart = minusOneMonth(issuedDate);
+              var lastEnd = (dueDate);
+              console.log("Searching for this bill between dates ", lastStart, "and ", lastEnd);
+            wasBillPaidBetweenDates(bill,lastStart, lastEnd, function (err, wasPaid, paidBillDetails){
+              console.log(">>>>>>>>>>>>>>>>>>>>");
+              console.log(">>>>>>>>>>>>>>>>>>>>");
+              console.log(">>>>>>>>>>>>>>>>>>>>");
+              console.log("I checked for", bill.name, ", between dates ", lastStart, "and ", lastEnd, "I found following details - ");
               if(!wasPaid) {
-                notifications_helper.alertUnpaidBill(bill, daysLeft);
+                console.log("Due date gone, For bill config - ", bill, ". And bill was not paid. Sending alert notification.");
+                notifications_helper.alertUnpaidBill(bill.name, daysLeft);
+              } else {
+                  console.log("Due date gone, For bill config - ", bill.name, ". And bill was paid.");
+                  console.log("paid bill details - ", paidBillDetails);
               }
             });
           }
+        } else {
+            console.log("Due date is not near!");
         }
       }
     });

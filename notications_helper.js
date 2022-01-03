@@ -66,7 +66,7 @@ function notifyUploadBillFn(billConfig, uploadedBillDetails) {
     var subject = "[INFO] Bill paid for " + billConfig.name;
     var text = `This is a notification that you have just uploaded a bill proof of type - ${billConfig.name}. File uploaded is attached for your reference.`;
     var html = getHtmlForEmail(text, billConfig);
-    var attachments  = getAttachments((uploadedBillDetails));
+    var attachments  = getAttachments([uploadedBillDetails]);
     console.log(text);
     email_helper.sendMail(subject, text, html, billConfig.email, attachments);
 }
