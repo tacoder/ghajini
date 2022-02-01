@@ -18,6 +18,14 @@ var config =  {
     },
     bills : [
         {
+          name: "BSES bill pay",
+          issue_date: 25,
+          due_date: 9,
+          keep_reminding_before_days: 3,
+          notify_after_days: 2,
+          email: "abhinav.singh21093@gmail.com"
+        },
+        {
           name: "citibank bill pay",
           issue_date: 20,
           due_date: 6,
