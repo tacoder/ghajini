@@ -18,6 +18,14 @@ var config =  {
     },
     bills : [
         {
+          name: "RBL zomato edition",
+          issue_date: 16,
+          due_date: 6,
+          keep_reminding_before_days: 3,
+          notify_after_days: 2,
+          email: "abhinav.singh21093@gmail.com"
+        },
+        {
           name: "BSES bill pay",
           issue_date: 25,
           due_date: 9,
