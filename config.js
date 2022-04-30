@@ -18,6 +18,14 @@ var config =  {
     },
     bills : [
         {
+          name: "AXIS flipkart card",
+          issue_date: 15,
+          due_date: 5,
+          keep_reminding_before_days: 3,
+          notify_after_days: 2,
+          email: "abhinav.singh21093@gmail.com"
+        },
+        {
           name: "RBL zomato edition",
           issue_date: 16,
           due_date: 6,
