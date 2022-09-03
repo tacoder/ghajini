@@ -18,6 +18,14 @@ var config =  {
     },
     bills : [
         {
+          name: "RLM elec bill 5977261502",
+          issue_date: 15,
+          due_date: 5,
+          keep_reminding_before_days: 3,
+          notify_after_days: 2,
+          email: "abhinav.singh21093@gmail.com"
+        },
+        {
           name: "AXIS flipkart card",
           issue_date: 15,
           due_date: 5,
@@ -34,7 +42,7 @@ var config =  {
           email: "abhinav.singh21093@gmail.com"
         },
         {
-          name: "BSES bill pay",
+          name: "BSES bill pay 103371500",
           issue_date: 25,
           due_date: 9,
           keep_reminding_before_days: 3,
