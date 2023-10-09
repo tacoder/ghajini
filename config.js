@@ -50,14 +50,6 @@ var config =  {
           email: "abhinav.singh21093@gmail.com"
         },
         {
-          name: "citibank bill pay",
-          issue_date: 20,
-          due_date: 6,
-          keep_reminding_before_days: 3,
-          notify_after_days: 2,
-          email: "abhinav.singh21093@gmail.com"
-        },
-        {
           name: "sbi BPCL bill pay",
           issue_date: 8,
           due_date: 28,
