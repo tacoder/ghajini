@@ -88,6 +88,54 @@ var config =  {
           keep_reminding_before_days: 3,
           notify_after_days: 2,
           email: "abhinav.singh21093@gmail.com"
+        },
+        {
+          name: "Phone backup",
+          issue_date: 1,
+          due_date: 15,
+          keep_reminding_before_days: 3,
+          notify_after_days: 2,
+          email: "abhinav.singh21093@gmail.com"
+        },
+        {
+          name: "Print statements",
+          issue_date: 1,
+          due_date: 15,
+          keep_reminding_before_days: 3,
+          notify_after_days: 2,
+          email: "abhinav.singh21093@gmail.com"
+        },
+        {
+          name: "Analyse spends",
+          issue_date: 1,
+          due_date: 15,
+          keep_reminding_before_days: 3,
+          notify_after_days: 2,
+          email: "abhinav.singh21093@gmail.com"
+        },
+        {
+          name: "Cash monthly",
+          issue_date: 25,
+          due_date: 30,
+          keep_reminding_before_days: 1,
+          notify_after_days: 5,
+          email: "abhinav.singh21093@gmail.com"
+        },
+        {
+          name: "Country delight wallet load",
+          issue_date: 1,
+          due_date: 15,
+          keep_reminding_before_days: 3,
+          notify_after_days: 2,
+          email: "abhinav.singh21093@gmail.com"
+        },
+        {
+          name: "DigitalOcean payment",
+          issue_date: 1,
+          due_date: 10,
+          keep_reminding_before_days: 3,
+          notify_after_days: 2,
+          email: "abhinav.singh21093@gmail.com"
         }
       ]
   }
