@@ -23,7 +23,8 @@ var config =  {
           due_date: 29,
           keep_reminding_before_days: 3,
           notify_after_days: 2,
-          email: "abhinav.singh21093@gmail.com"
+          email: "abhinav.singh21093@gmail.com",
+          emailBody: "https://www.bescom.co.in/SCP/MyAccount/QuickPayment.aspx"
         },
         {
           name: "AXIS flipkart card",
@@ -95,7 +96,8 @@ var config =  {
           due_date: 15,
           keep_reminding_before_days: 3,
           notify_after_days: 2,
-          email: "abhinav.singh21093@gmail.com"
+          email: "abhinav.singh21093@gmail.com",
+          emailBody: "<ol><li>Photos</li><li>Contacts</li><li>Videos</li><li>Recordings</li><li><ol>"
         },
         {
           name: "Print statements",
@@ -103,7 +105,8 @@ var config =  {
           due_date: 15,
           keep_reminding_before_days: 3,
           notify_after_days: 2,
-          email: "abhinav.singh21093@gmail.com"
+          email: "abhinav.singh21093@gmail.com",
+          emailBody: "<ol><li>ICICI plat</li><li>RBL shotrite</li><li>HDFC mmillenia</li><li>AMEX</li><li>ICICI AMZ</li><li>AXIS Flipkart</li><li>SBI BPCL</li></ol>"
         },
         {
           name: "Analyse spends",

@@ -10,7 +10,7 @@ function getPaymentUrlForBill(bill) {
 
 function getHtmlForEmail(text, billConfig) {
     var paymentUrl = getPaymentUrlForBill(billConfig);
-    return `<p>${text}</p><p><strong>Please ignore if already paid</strong></p><br /><p>Click <a href='${paymentUrl}'>here</a> to upload proof after payment</p>`;
+    return `<p>${text}</p><p><strong>Please ignore if already paid</strong></p><br /><p>Click <a href='${paymentUrl}'>here</a> to upload proof after payment</p><br /> <br />` + (billConfig.emailBody | '');
 }
 
 function getUploadedFilePath(data) {
