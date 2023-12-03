@@ -37,7 +37,7 @@ var config =  {
         {
           name: "RBL zomato edition",
           issue_date: 16,
-          due_date: 6,
+          due_date: 5,
           keep_reminding_before_days: 3,
           notify_after_days: 2,
           email: "abhinav.singh21093@gmail.com"
@@ -60,8 +60,8 @@ var config =  {
         },
         {
           name: "HDFC diners bill pay",
-          issue_date: 15,
-          due_date: 5,
+          issue_date: 16,
+          due_date: 4,
           keep_reminding_before_days: 3,
           notify_after_days: 2,
           email: "abhinav.singh21093@gmail.com"
@@ -85,7 +85,7 @@ var config =  {
         {
           name: "airtel internet bill pay",
           issue_date: 27,
-          due_date: 16,
+          due_date: 7,
           keep_reminding_before_days: 3,
           notify_after_days: 2,
           email: "abhinav.singh21093@gmail.com"
