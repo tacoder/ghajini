@@ -3,6 +3,7 @@ const config = require('./config.js');
 const mime = require('mime-types')
 const path = require('path');
 const fs = require('fs');
+const summary_email_generator = require('./email/summary_email_generator.js');
 
 function getPaymentUrlForBill(bill) {
     return `https://abhinavsingh.co.in/ghajini/uploadBill?billType=${bill.name}`;
@@ -103,10 +104,21 @@ function notifyFatalErrorFn(err, adminEmail) {
     email_helper.sendMail(subject, text, html, adminEmail);
 }
 
+function notifySummaryFn(summary) {
+    var subject = "Summary for your pending deatilu";
+    var text = new summary_email_generator().generateSummaryHtml(summary);
+    var html = `<p>${text}</p>`
+    // console.log(text);
+        // new summary_email_generator().generateSummaryHtml(summary);
+    email_helper.sendMail(subject, text, html, "abhinav.singh21093@gmail.com");
+}
+
 module.exports = {
     notifyPending:notifyPendingFn,
     notifyUploadBill:notifyUploadBillFn,
     notifyPaidBill:notifyPaidBillFn,
     alertUnpaidBill:alertUnpaidBillFn,
-    notifyFatalError:notifyFatalErrorFn
+    notifyFatalError:notifyFatalErrorFn,
+    notifySummary:notifySummaryFn,
+    getPaymentUrlForBill:getPaymentUrlForBill
 }

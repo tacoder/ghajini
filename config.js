@@ -97,7 +97,8 @@ var config =  {
           keep_reminding_before_days: 3,
           notify_after_days: 2,
           email: "abhinav.singh21093@gmail.com",
-          emailBody: "<ol><li>Photos</li><li>Contacts</li><li>Videos</li><li>Recordings</li><li><ol>"
+          emailBody: "<ol><li>Photos</li><li>Contacts</li><li>Videos</li><li>Recordings</li><li><ol>",
+          task: true
         },
         {
           name: "Print statements",
@@ -106,7 +107,8 @@ var config =  {
           keep_reminding_before_days: 3,
           notify_after_days: 2,
           email: "abhinav.singh21093@gmail.com",
-          emailBody: "<ol><li>ICICI plat</li><li>RBL shotrite</li><li>HDFC mmillenia</li><li>AMEX</li><li>ICICI AMZ</li><li>AXIS Flipkart</li><li>SBI BPCL</li></ol>"
+          emailBody: "<ol><li>ICICI plat</li><li>RBL shotrite</li><li>HDFC mmillenia</li><li>AMEX</li><li>ICICI AMZ</li><li>AXIS Flipkart</li><li>SBI BPCL</li></ol>",
+          task: true
         },
         {
           name: "Analyse spends",
@@ -114,7 +116,8 @@ var config =  {
           due_date: 15,
           keep_reminding_before_days: 3,
           notify_after_days: 2,
-          email: "abhinav.singh21093@gmail.com"
+          email: "abhinav.singh21093@gmail.com",
+          task: true
         },
         {
           name: "Cash monthly",
@@ -122,7 +125,8 @@ var config =  {
           due_date: 30,
           keep_reminding_before_days: 1,
           notify_after_days: 5,
-          email: "abhinav.singh21093@gmail.com"
+          email: "abhinav.singh21093@gmail.com",
+          task: true
         },
         {
           name: "Country delight wallet load",
@@ -137,6 +141,14 @@ var config =  {
           issue_date: 1,
           due_date: 10,
           keep_reminding_before_days: 3,
+          notify_after_days: 2,
+          email: "abhinav.singh21093@gmail.com"
+        },
+        {
+          name: "SBI Cashback",
+          issue_date: 5,
+          due_date: 24,
+          keep_reminding_before_days: 5,
           notify_after_days: 2,
           email: "abhinav.singh21093@gmail.com"
         }

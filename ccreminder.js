@@ -3,13 +3,11 @@ var notifications_helper = require('./notications_helper.js');
 var ccreminder_date_helper = require('./ccreminder_date_helper.js');
 var date_helper = require("./date_helper.js");
 var recordsHelper = require('./bill_record_helper.js')
-
+var mergeObjectsWithArrayValues = require('./util.js').mergeObjectsWithArrayValues;
 var getCurrentMonthDate = date_helper.getCurrentMonthDate;
 var dateBetween = date_helper.dateBetween;
 var getDueDate = ccreminder_date_helper.getDueDate;
 var getIssuedDate = ccreminder_date_helper.getIssuedDate;
-
-var notifyPending = notifications_helper.notifyPending;
 
 var wasBillPaidBetweenDates = recordsHelper.wasBillPaidBetweenDates;
 
@@ -37,14 +35,32 @@ function minusOneMonth(date) {
   return d;
 }
 
-function remindForBillAndDate(bill, todaysDate) {
+function datum(bill, daysLeft, paidBillDetails) {
+  return {
+    config: bill,
+    daysLeft:daysLeft,
+    paidBillDetails: paidBillDetails 
+  }
+}
+
+async function remindForBillAndDate(bill, todaysDate) {
     var dueDate = getDueDate(bill, todaysDate);
     var issuedDate = getIssuedDate(bill, todaysDate);
     var today = getCurrentMonthDate(todaysDate);
-
+    var alerts = {
+      lasped: [],
+      urgent: [],
+      unpaid: [],
+      paid: [],
+      tasks: []
+    } 
 
     // Is pending?
-    wasBillPaidBetweenDates(bill, issuedDate, dueDate, function (err, wasPaid, paidBillDetails){
+    var billpaiddetails = await wasBillPaidBetweenDates(bill, issuedDate, dueDate);
+    var err= billpaiddetails.err;
+    var wasPaid = billpaiddetails.wasPaid;
+    var paidBillDetails = billpaiddetails.paidBillDetails;
+
       console.log("==================================");
       console.log("==================================");
       console.log("==================================");
@@ -65,7 +81,8 @@ function remindForBillAndDate(bill, todaysDate) {
           console.log("Toady is between issue date and due date.");
         if (!wasPaid) {
             console.log("Bill has not been paid, notifying bill payment for this bill type.");
-          notifyPending(bill, daysLeft);
+            notifications_helper.notifyPending(bill, daysLeft);
+            alerts.unpaid.push(datum(bill, daysLeft, paidBillDetails))
         }
       }
       if(wasPaid) {
@@ -75,6 +92,7 @@ function remindForBillAndDate(bill, todaysDate) {
             console.log("Time for notification , Bill was paid, paid bill details - ", JSON.stringify(paidBillDetails, null, 2));
           // notify upcoming due date
           notifications_helper.notifyPaidBill(bill, daysLeft, paidBillDetails)
+          alerts.paid.push(datum(bill, daysLeft, paidBillDetails))
         }
       } else {
           console.log("Bill was not paid, checking if due date is near...");
@@ -85,12 +103,16 @@ function remindForBillAndDate(bill, todaysDate) {
           if(dueDateUpcoming(bill.unpaid_bill_notification, daysLeft)){
               console.log("Due date is upcoming... alerting unpaid bill notif ");
             notifications_helper.alertUnpaidBill(bill, daysLeft);
+            alerts.urgent.push(datum(bill, daysLeft, paidBillDetails))
           } else {
               console.log("Due date has gone by, checking if last cycle bill details were uploaded.");
               var lastStart = minusOneMonth(issuedDate);
               var lastEnd = (dueDate);
               console.log("Searching for this bill between dates ", lastStart, "and ", lastEnd);
-            wasBillPaidBetweenDates(bill,lastStart, lastEnd, function (err, wasPaid, paidBillDetails){
+              var wasBillPaid = wasBillPaidBetweenDates(bill,lastStart, lastEnd);
+              var err = wasBillPaid.err;
+              var wasPaid = wasBillPaid.waspaid;
+              var paidBillDetails = wasBillPaid.paidBillDetails;
               console.log(">>>>>>>>>>>>>>>>>>>>");
               console.log(">>>>>>>>>>>>>>>>>>>>");
               console.log(">>>>>>>>>>>>>>>>>>>>");
@@ -98,18 +120,18 @@ function remindForBillAndDate(bill, todaysDate) {
               if(!wasPaid) {
                 console.log("Due date gone, For bill config - ", bill, ". And bill was not paid. Sending alert notification.");
                 notifications_helper.alertUnpaidBill(bill.name, daysLeft);
+                alerts.lasped.push(datum(bill, daysLeft, paidBillDetails))
               } else {
                   console.log("Due date gone, For bill config - ", bill.name, ". And bill was paid.");
                   console.log("paid bill details - ", paidBillDetails);
               }
-            });
+            ;
           }
         } else {
             console.log("Due date is not near!");
         }
       }
-    });
-
+    return alerts;
 }
 
 
@@ -122,15 +144,22 @@ function mergeConfig(config, commonConfig) {
   return config;
 }
 
-function remindFn() {
+
+
+async function remindFn() {
   var todaysDate = new Date().getDate();
+  var alerts = {};
   for (bill in config.bills) {
     var billConfig = config.bills[bill];
     var billConfigWithCommons = mergeConfig(billConfig, config.common);
     console.log("CONFIG ID ");
     console.log(JSON.stringify(billConfigWithCommons));
-    remindForBillAndDate(billConfigWithCommons, todaysDate);
+    var alertsForThisBill = await remindForBillAndDate(billConfigWithCommons, todaysDate);
+    // console.log("akerts for this bill - ", alertsForThisBill);
+    alerts = mergeObjectsWithArrayValues(alerts, alertsForThisBill);
   }
+  // console.log("finla set of alret e", alerts);
+  notifications_helper.notifySummary(alerts);
 }
 
 module.exports = {  remind : remindFn }

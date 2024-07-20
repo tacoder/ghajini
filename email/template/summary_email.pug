@@ -1,0 +1,40 @@
+doctype html
+html
+  head
+    style.
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+  body
+      each categoryObj, name in categories
+        //- p #{JSON.stringify(categoryObj)}
+        //- p #{JSON.stringify(categoryObj.length)}
+        if categoryObj.length > 0
+          h2= name
+          p This is the paragraph before #{name} table.
+          table
+            tr
+              th Name of Bill
+              th Days Left to Pay
+              th Link to Pay
+            each item in categoryObj
+              tr
+                td= item.config.name || "ERROR"
+                td= item.daysLeft || "ERROR"
+                td
+                  if item.paymentLink
+                    a(href=item.paymentLink) Pay Now
+                  else
+                    span.error ERROR
+        else
+          h2= name
+          p No data available for #{name}.
