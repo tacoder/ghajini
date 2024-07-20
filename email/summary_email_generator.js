@@ -1,8 +1,7 @@
 const pug = require('pug');
 const fs = require('fs');
 const path = require('path');
-const getPaymentUrlForBill = require('../notications_helper.js').getPaymentUrlForBill;
-
+const { getPaymentUrlForBill } = require('../util.js');
 class EmailTemplateGenerator {
     // constructor(templatePath) {
     //     this.templatePath = templatePath;

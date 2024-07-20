@@ -16,4 +16,12 @@ function mergeObjectsWithArrayValuesFn(obj1, obj2) {
     return result;
   }
 
-module.exports = {mergeObjectsWithArrayValues:mergeObjectsWithArrayValuesFn}
+function getPaymentUrlForBillFn(bill) {
+    return `https://abhinavsingh.co.in/ghajini/uploadBill?billType=${bill.name}`;
+}
+
+
+module.exports = {
+  mergeObjectsWithArrayValues:mergeObjectsWithArrayValuesFn,
+  getPaymentUrlForBill:getPaymentUrlForBillFn
+}

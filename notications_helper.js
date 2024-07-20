@@ -4,10 +4,7 @@ const mime = require('mime-types')
 const path = require('path');
 const fs = require('fs');
 const summary_email_generator = require('./email/summary_email_generator.js');
-
-function getPaymentUrlForBill(bill) {
-    return `https://abhinavsingh.co.in/ghajini/uploadBill?billType=${bill.name}`;
-}
+const { getPaymentUrlForBill } = require('./util.js');
 
 function getHtmlForEmail(text, billConfig) {
     var paymentUrl = getPaymentUrlForBill(billConfig);
@@ -119,6 +116,5 @@ module.exports = {
     notifyPaidBill:notifyPaidBillFn,
     alertUnpaidBill:alertUnpaidBillFn,
     notifyFatalError:notifyFatalErrorFn,
-    notifySummary:notifySummaryFn,
-    getPaymentUrlForBill:getPaymentUrlForBill
+    notifySummary:notifySummaryFn
 }
