@@ -48,7 +48,7 @@ async function remindForBillAndDate(bill, todaysDate) {
     var issuedDate = getIssuedDate(bill, todaysDate);
     var today = getCurrentMonthDate(todaysDate);
     var alerts = {
-      lasped: [],
+      lapsed: [],
       urgent: [],
       unpaid: [],
       paid: [],
@@ -120,7 +120,7 @@ async function remindForBillAndDate(bill, todaysDate) {
               if(!wasPaid) {
                 console.log("Due date gone, For bill config - ", bill, ". And bill was not paid. Sending alert notification.");
                 notifications_helper.alertUnpaidBill(bill.name, daysLeft);
-                alerts.lasped.push(datum(bill, daysLeft, paidBillDetails))
+                alerts.lapsed.push(datum(bill, daysLeft, paidBillDetails))
               } else {
                   console.log("Due date gone, For bill config - ", bill.name, ". And bill was paid.");
                   console.log("paid bill details - ", paidBillDetails);
