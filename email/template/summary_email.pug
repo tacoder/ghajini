@@ -25,20 +25,22 @@ html
             tr
               th Name of Bill
               th Days Left to Pay
-              th Link to Pay
               if name === "paid"
                 th Proof uploaded
+              else 
+                th Link to Pay
             each item in categoryObj
               tr
                 td= item.config.name || "ERROR"
                 td= item.daysLeft || "ERROR"
-                td
-                  if item.paymentLink
-                    a(href=item.paymentLink) Pay Now
-                  else
-                    span.error ERROR
                 if name === "paid"
-                  td= item.paidBillDetails ? item.paidBillDetails.proofLocation : ""
+                  td= item.paidBillDetails ? item.paidBillDetails[0] ? getFileName(item.paidBillDetails[0].proofLocation) : "": ""
+                else 
+                  td
+                    if item.paymentLink
+                      a(href=item.paymentLink) Pay Now
+                    else
+                      span.error ERROR
         else
           h2= toTitleCase(name)
           p No data available for #{name}.

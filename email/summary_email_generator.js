@@ -12,6 +12,9 @@ class EmailTemplateGenerator {
                 }
             );
         }
+        function getFileName(filePath) {
+            return path.basename(filePath);
+        }
         // Define the path to the template relative to this script
         const templatePath = path.join(__dirname, 'template', 'summary_email.pug');
 
@@ -33,7 +36,7 @@ class EmailTemplateGenerator {
         }, {});
         
         // Generate HTML with the processed data
-        const html = compileTemplate({categories:processedData, toTitleCase:toTitleCase});
+        const html = compileTemplate({categories:processedData, toTitleCase:toTitleCase, getFileName:getFileName});
         return html;
     }
 }

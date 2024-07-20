@@ -17,7 +17,7 @@ describe('notificationsHelper', () => {
       // Assert
       expect(email_helper.sendMail).toHaveBeenCalled();
       const actualSubject = email_helper.sendMail.mock.calls[0][0];
-      console.log("actula sub - ", actualSubject);
+      console.log("actual sub - ", actualSubject);
       expect(actualSubject===expectedSubject).toBeTruthy();
     });
   });
