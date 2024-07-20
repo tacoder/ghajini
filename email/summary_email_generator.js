@@ -3,20 +3,21 @@ const fs = require('fs');
 const path = require('path');
 const { getPaymentUrlForBill } = require('../util.js');
 class EmailTemplateGenerator {
-    // constructor(templatePath) {
-    //     this.templatePath = templatePath;
-    // }
-
     generateSummaryHtml(summary) {
+        function toTitleCase(str) {
+            return str.replace(
+                /\w\S*/g,
+                function(txt) {
+                    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+                }
+            );
+        }
         // Define the path to the template relative to this script
         const templatePath = path.join(__dirname, 'template', 'summary_email.pug');
 
         // Compile the template to a function using the absolute path
         const compileTemplate = pug.compileFile(templatePath);
         
-        // Compile the template to a function
-        // const compileTemplate = pug.compileFile('email/templates/summary_email.pug');
-
         // Process each category in the summary object
         const categories = Object.keys(summary);
         const processedData = categories.reduce((acc, category) => {
@@ -24,8 +25,6 @@ class EmailTemplateGenerator {
             acc[category] = summary[category]
                 .filter(item => item !== null) // Filter out null values
                 .map(item => {
-                    // console.log("item", item);
-                    // const daysLeft = this.calculateDaysLeft(item.due_date);
                     const paymentLink = getPaymentUrlForBill(item.config); // Assuming a method to generate payment links
                     return { ...item, paymentLink };
                 })
@@ -34,7 +33,7 @@ class EmailTemplateGenerator {
         }, {});
         
         // Generate HTML with the processed data
-        const html = compileTemplate({categories:processedData});
+        const html = compileTemplate({categories:processedData, toTitleCase:toTitleCase});
         return html;
     }
 }

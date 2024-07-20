@@ -14,18 +14,20 @@ html
       th {
         background-color: #f2f2f2;
       }
+      .urgent {
+        background-color: #fbb1b1;
+      }
   body
       each categoryObj, name in categories
-        //- p #{JSON.stringify(categoryObj)}
-        //- p #{JSON.stringify(categoryObj.length)}
         if categoryObj.length > 0
-          h2= name
-          p This is the paragraph before #{name} table.
-          table
+          h2= toTitleCase(name)
+          table(class=name)
             tr
               th Name of Bill
               th Days Left to Pay
               th Link to Pay
+              if name === "paid"
+                th Proof uploaded
             each item in categoryObj
               tr
                 td= item.config.name || "ERROR"
@@ -35,6 +37,8 @@ html
                     a(href=item.paymentLink) Pay Now
                   else
                     span.error ERROR
+                if name === "paid"
+                  td= item.paidBillDetails ? item.paidBillDetails.proofLocation : ""
         else
-          h2= name
+          h2= toTitleCase(name)
           p No data available for #{name}.
