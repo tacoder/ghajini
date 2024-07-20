@@ -102,12 +102,17 @@ function notifyFatalErrorFn(err, adminEmail) {
 }
 
 function notifySummaryFn(summary) {
-    var subject = "Summary for your pending deatilu";
+    var subject = "Summary for your pending deatils";
     var text = new summary_email_generator().generateSummaryHtml(summary);
     var html = `<p>${text}</p>`
+    var flatBillDetails = summary.paid.map(a => a.paidBillDetails).flat(Infinity)
+    // console.log("summary.paid", summary.paid);
+    console.log("flatBillDetails)", flatBillDetails);
+    
+    var attachments = getAttachments(flatBillDetails);
     // console.log(text);
         // new summary_email_generator().generateSummaryHtml(summary);
-    email_helper.sendMail(subject, text, html, "abhinav.singh21093@gmail.com");
+    email_helper.sendMail(subject, text, html, "abhinav.singh21093@gmail.com", attachments);
 }
 
 module.exports = {

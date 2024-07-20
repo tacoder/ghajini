@@ -20,7 +20,7 @@ class EmailTemplateGenerator {
         // Process each category in the summary object
         const categories = Object.keys(summary);
         const processedData = categories.reduce((acc, category) => {
-            console.log(" summary[category]", summary[category]);
+            console.log(" summary[", category, "]", summary[category]);
             acc[category] = summary[category]
                 .filter(item => item !== null) // Filter out null values
                 .map(item => {

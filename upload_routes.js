@@ -22,23 +22,20 @@ function getBillConfig(billType) {
     return false;
 }
 
-function alreadyUploaded(billType, cb ){
+async function alreadyUploaded(billType) {
     var start = new Date();
     start.setHours(0,0,0,0);
 
     var end = new Date();
     end.setHours(23,59,59,999);
 
-    mongoose.searchForUploadedBillTypeBetweenDates(billType, start, end, function(err, data){
-        if(err) {
-            cb(err, true);
-        }
-        if(data.length > 0 ) {
-            cb(null, true);
-        } else {
-            cb(null, false);
-        }
-    });
+    try {
+        const data = await mongoose.searchForUploadedBillTypeBetweenDates(billType, start, end);
+        return data.length > 0;
+    } catch (err) {
+        console.error(err);
+        throw err; // Rethrow the error to be handled by the caller
+    }
 }
 
 function getProofDirectory(billType) {
@@ -61,54 +58,45 @@ function getConfig(billType) {
     return mergeConfig(getBillConfig(billType), config.common);
 }
 
-function uploadBillFn(req, res) {
+async function uploadBillFn(req, res) {
+    // Validations remain the same...
 
-  // Validations:
-  if (!req.files || Object.keys(req.files).length === 0) {
-    return res.status(400).send('No files were uploaded.');
-  }
-  if (!req.body || Object.keys(req.body).length === 0) {
-    return res.status(400).send('No parameters were provided.');
-  }
-  var billType = req.body.billType;
+    var billType = req.body.billType;
 
-  let proof = req.files.proof;
-  var proofDirectory = getProofDirectory(billType);
+    let proof = req.files.proof;
+    var proofDirectory = getProofDirectory(billType);
 
-  if (!validBillType(billType)) {
-    return res.status(400).send('Unsupported bill type.');
-  }
-  alreadyUploaded(billType, function(err, isUploaded) {
-      isUploaded = false;
-      if(err ) {
-        return res.status(500).send(err);
-      } else {
-          if(isUploaded) {
+    if (!validBillType(billType)) {
+        return res.status(400).send('Unsupported bill type.');
+    }
+
+    try {
+        const isUploaded = await alreadyUploaded(billType);
+        if (isUploaded) {
             return res.status(400).send('Already uploaded for this bill type today. Try again tomorrow!');
-          } else {
+        } else {
             mkdirp.sync(proofDirectory);
-            proof.mv(proofDirectory + '/' + proof.name, function(err) {
+            proof.mv(proofDirectory + '/' + proof.name, async function(err) {
                 if (err) {
                     console.log(err);
                     return res.status(500).send(err);
                 } else {
-                    mongoose.recordPayment({name:billType}, new Date(), proofDirectory + '/' + proof.name, function(err, data) {
-                        if(err) {
-                            console.log("ERROR!-", err);
-                            return res.status(500).send(err);
-                        } else {
-                            console.log("Received data after record paytment in mongoose- ", data);
-                            uploadNotifier.notify(getConfig(billType), data);
-                            res.send('File uploaded!');
-                        }
-                    });
+                    try {
+                        const data = await mongoose.recordPayment({name: billType}, new Date(), proofDirectory + '/' + proof.name);
+                        console.log("Received data after record payment in mongoose- ", data);
+                        uploadNotifier.notify(getConfig(billType), data);
+                        res.send('File uploaded!');
+                    } catch (err) {
+                        console.log("ERROR!-", err);
+                        return res.status(500).send(err);
+                    }
                 }
             });
-
-
-          }
-      }
-  });
+        }
+    } catch (err) {
+        console.error(err);
+        return res.status(500).send(err.message);
+    }
 }
 
 module.exports ={uploadBill:uploadBillFn}
