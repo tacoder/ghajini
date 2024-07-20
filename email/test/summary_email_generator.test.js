@@ -18,7 +18,7 @@ describe('EmailTemplateGenerator', function() {
             // assert.ok(html.includes("Water Bill"));
 
             // Optionally, you can write the generated HTML to a file for manual inspection
-            fs.writeFileSync(path.join(__dirname, 'output.html'), html);
+            fs.writeFileSync(path.join(__dirname, 'summary_output.html'), html);
         });
     });
 });
