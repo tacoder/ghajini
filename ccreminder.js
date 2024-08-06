@@ -115,7 +115,7 @@ async function remindForBillAndDate(bill, todaysDate) {
               console.log("Searching for this bill between dates ", lastStart, "and ", lastEnd);
               var wasBillPaid = await wasBillPaidBetweenDates(bill,lastStart, lastEnd);
               var err = wasBillPaid.err;
-              var wasPaid = wasBillPaid.waspaid;
+              var wasPaid = wasBillPaid.wasPaid;
               var paidBillDetails = wasBillPaid.paidBillDetails;
               console.log(">>>>>>>>>>>>>>>>>>>>");
               console.log(">>>>>>>>>>>>>>>>>>>>");
