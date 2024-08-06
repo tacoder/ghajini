@@ -82,7 +82,11 @@ async function remindForBillAndDate(bill, todaysDate) {
         if (!wasPaid) {
             console.log("Bill has not been paid, notifying bill payment for this bill type.");
             notifications_helper.notifyPending(bill, daysLeft);
-            alerts.unpaid.push(datum(bill, daysLeft, paidBillDetails))
+            if(bill.task) {
+              alerts.tasks.push(datum(bill, daysLeft, paidBillDetails))
+            } else {
+              alerts.unpaid.push(datum(bill, daysLeft, paidBillDetails))
+            }
         }
       }
       if(wasPaid) {
@@ -109,7 +113,7 @@ async function remindForBillAndDate(bill, todaysDate) {
               var lastStart = minusOneMonth(issuedDate);
               var lastEnd = (dueDate);
               console.log("Searching for this bill between dates ", lastStart, "and ", lastEnd);
-              var wasBillPaid = wasBillPaidBetweenDates(bill,lastStart, lastEnd);
+              var wasBillPaid = await wasBillPaidBetweenDates(bill,lastStart, lastEnd);
               var err = wasBillPaid.err;
               var wasPaid = wasBillPaid.waspaid;
               var paidBillDetails = wasBillPaid.paidBillDetails;
@@ -119,7 +123,7 @@ async function remindForBillAndDate(bill, todaysDate) {
               console.log("I checked for", bill.name, ", between dates ", lastStart, "and ", lastEnd, "I found following details - ");
               if(!wasPaid) {
                 console.log("Due date gone, For bill config - ", bill, ". And bill was not paid. Sending alert notification.");
-                notifications_helper.alertUnpaidBill(bill.name, daysLeft);
+                notifications_helper.alertUnpaidBill(bill, daysLeft);
                 alerts.lapsed.push(datum(bill, daysLeft, paidBillDetails))
               } else {
                   console.log("Due date gone, For bill config - ", bill.name, ". And bill was paid.");
