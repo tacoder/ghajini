@@ -81,7 +81,7 @@ async function remindForBillAndDate(bill, todaysDate) {
           console.log("Toady is between issue date and due date.");
         if (!wasPaid) {
             console.log("Bill has not been paid, notifying bill payment for this bill type.");
-            notifications_helper.notifyPending(bill, daysLeft);
+            // notifications_helper.notifyPending(bill, daysLeft);
             if(bill.task) {
               alerts.tasks.push(datum(bill, daysLeft, paidBillDetails))
             } else {
@@ -95,7 +95,7 @@ async function remindForBillAndDate(bill, todaysDate) {
         if(bill.paid_bill_notification_days == daysLeft) {
             console.log("Time for notification , Bill was paid, paid bill details - ", JSON.stringify(paidBillDetails, null, 2));
           // notify upcoming due date
-          notifications_helper.notifyPaidBill(bill, daysLeft, paidBillDetails)
+          // notifications_helper.notifyPaidBill(bill, daysLeft, paidBillDetails)
           alerts.paid.push(datum(bill, daysLeft, paidBillDetails))
         }
       } else {
@@ -106,7 +106,7 @@ async function remindForBillAndDate(bill, todaysDate) {
           console.log("Bill due date is near, days left = ", daysLeft, " bill unpaid config details = ", bill.unpaid_bill_notification);
           if(dueDateUpcoming(bill.unpaid_bill_notification, daysLeft)){
               console.log("Due date is upcoming... alerting unpaid bill notif ");
-            notifications_helper.alertUnpaidBill(bill, daysLeft);
+            // notifications_helper.alertUnpaidBill(bill, daysLeft);
             alerts.urgent.push(datum(bill, daysLeft, paidBillDetails))
           } else {
               console.log("Due date has gone by, checking if last cycle bill details were uploaded.");
@@ -123,7 +123,7 @@ async function remindForBillAndDate(bill, todaysDate) {
               console.log("I checked for", bill.name, ", between dates ", lastStart, "and ", lastEnd, "I found following details - ");
               if(!wasPaid) {
                 console.log("Due date gone, For bill config - ", bill, ". And bill was not paid. Sending alert notification.");
-                notifications_helper.alertUnpaidBill(bill, daysLeft);
+                // notifications_helper.alertUnpaidBill(bill, daysLeft);
                 alerts.lapsed.push(datum(bill, daysLeft, paidBillDetails))
               } else {
                   console.log("Due date gone, For bill config - ", bill.name, ". And bill was paid.");
