@@ -18,6 +18,14 @@ var config =  {
     },
     bills : [
         {
+          name: "Hdfc swiggy",
+          issue_date: 15,
+          due_date: 4,
+          keep_reminding_before_days: 3,
+          notify_after_days: 2,
+          email: "abhinav.singh21093@gmail.com"
+        },
+        {
           name: "RLM elec bill 5977261502",
           issue_date: 15,
           due_date: 29,
