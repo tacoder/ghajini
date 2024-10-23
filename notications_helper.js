@@ -106,7 +106,7 @@ function notifySummaryFn(summary) {
     summary.urgent.length > 0 ? subject += `|🚨Urgent ${summary.urgent.length}` : '';
     summary.unpaid.length > 0 ? subject += `|😐Unpaid ${summary.unpaid.length}` : '';
     summary.tasks.length > 0 ? subject += `|😶‍🌫️Tasks ${summary.tasks.length}` : '';
-    
+    summary.urgent.length +  summary.unpaid.length + summary.tasks.length === 0 ? subject += `|😎 No Dues`: "";
     var text = new summary_email_generator().generateSummaryHtml(summary);
     var html = `<p>${text}</p>`
     var flatBillDetails = summary.paid.map(a => a.paidBillDetails).flat(Infinity)
