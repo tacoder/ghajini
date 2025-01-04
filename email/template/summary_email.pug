@@ -33,7 +33,7 @@ html
             each item in categoryObj
               tr
                 td= item.config.name || "ERROR"
-                td= item.config.emailBody || "ERROR"
+                td= #{item.config.emailBody} || "ERROR"
                 td= item.daysLeft || "ERROR"
                 if name === "paid"
                   td= item.paidBillDetails ? item.paidBillDetails[0] ? getFileName(item.paidBillDetails[0].proofLocation) : "": ""
