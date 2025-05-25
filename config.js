@@ -32,7 +32,7 @@ var config =  {
           keep_reminding_before_days: 3,
           notify_after_days: 2,
           email: "abhinav.singh21093@gmail.com",
-          emailBody: "https://www.bescom.co.in/bescom/main/quick-payment"
+          emailBody: "https://www.bescom.co.in/bescom/main/quick-payment-details/5977261502"
         },
         {
           name: "AXIS flipkart card",
@@ -56,7 +56,8 @@ var config =  {
           due_date: 9,
           keep_reminding_before_days: 3,
           notify_after_days: 2,
-          email: "abhinav.singh21093@gmail.com"
+          email: "abhinav.singh21093@gmail.com",
+          emailBody: "https://www.bsesdelhi.com/web/brpl/quick-pay-payment?p_p_id=com_bses_pay_now_portlet_BsesPayNowWebPortlet&p_p_lifecycle=0&_com_bses_pay_now_portlet_BsesPayNowWebPortlet_caNo=103371500"
         },
         {
           name: "sbi BPCL bill pay",
@@ -88,7 +89,8 @@ var config =  {
           due_date: 29,
           keep_reminding_before_days: 3,
           notify_after_days: 2,
-          email: "abhinav.singh21093@gmail.com"
+          email: "abhinav.singh21093@gmail.com",
+          emailBody: "https://billalert.mtnl.net.in/pay/login.asp"
         },
         {
           name: "airtel internet bill pay",
