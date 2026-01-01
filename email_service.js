@@ -22,7 +22,7 @@ function sendMailFn(subject, text, html, recepient, attachments=[]) {
     emailAPI.sendTransacEmail(message).then(res => {
         console.log(JSON.stringify(res.body));
     }).catch(err => {
-        console.error("Error sending email:", err.body);
+        console.error("Error sending email:", err, err.body);
     });
 }
 

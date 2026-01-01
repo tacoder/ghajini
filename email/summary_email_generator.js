@@ -1,6 +1,7 @@
 const pug = require('pug');
 const fs = require('fs');
 const path = require('path');
+const juice = require('juice');
 const { getPaymentUrlForBill } = require('../util.js');
 class EmailTemplateGenerator {
     generateSummaryHtml(summary) {

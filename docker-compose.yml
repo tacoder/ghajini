@@ -14,6 +14,7 @@ services:
     volumes:
       - .:/usr/src/app
       - /var/uploaded-bills/:/var/uploaded-bills/
+      - /usr/src/app/node_modules
     depends_on:
       - database
     environment: 

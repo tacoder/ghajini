@@ -5,6 +5,7 @@ function wasBillPaidBetweenDatesFn(bill, from, to) {
   return new Promise((resolve, reject) => {
       mongoose.searchForUploadedBillTypeBetweenDates(bill.name, from, to)
           .then(data => {
+              console.log("data from mongo is", data);
               if(data.length > 0) {
                   resolve({ wasPaid: true, paidBillDetails: data });
               } else {
