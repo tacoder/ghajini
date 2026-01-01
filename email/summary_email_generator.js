@@ -37,7 +37,9 @@ class EmailTemplateGenerator {
         
         // Generate HTML with the processed data
         const html = compileTemplate({categories:processedData, toTitleCase:toTitleCase, getFileName:getFileName});
-        return html;
+        // 2. Inline the CSS (This fixes the Brevo/Gmail issue)
+        const inlinedHtml = juice(html) ;
+        return inlinedHtml;
     }
 }
 

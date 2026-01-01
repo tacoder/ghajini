@@ -9,10 +9,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@getbrevo/brevo": "^3.0.1",
     "@sendgrid/mail": "^6.5.5",
     "express": "^4.17.1",
     "express-fileupload": "^1.2.1",
     "fs": "0.0.1-security",
+    "juice": "^11.0.3",
     "mime-types": "^2.1.32",
     "mkdirp": "^1.0.4",
     "mongodb": "^3.6.11",

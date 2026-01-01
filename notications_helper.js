@@ -27,7 +27,7 @@ function getAttachmentForPath(filePath) {
     var content = base64StringFromFile(filePath);
     return {
         content: content,
-        filename: filename,
+        name: filename,
         type: attachmentType,
         disposition: 'attachment'
     }
