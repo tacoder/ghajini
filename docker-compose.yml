@@ -18,7 +18,7 @@ services:
     depends_on:
       - database
     environment: 
-      - SENDGRID_API_KEY
+      - BREVO_API_KEY
       - GHAJINI_MONGO_URL=mongodb://database:27017/test
     restart: always
 volumes:
